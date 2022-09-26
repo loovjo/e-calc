@@ -1,0 +1,142 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Metrophobic&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="style.css">
+
+        <script src="calc.js"></script>
+        <script src="parse.js"></script>
+        <script src="bruter.js"></script>
+        <script src="app.js"></script>
+    </head>
+
+    <body>
+        <div id="header">
+            <h1>
+                Component Calculator
+            </h1>
+        </div>
+
+        <main>
+            <input id="expr" placeholder="" value=""></input>
+
+            <span id="error"></span>
+            <pre class="debug" id="tok-debug"></pre>
+            <pre class="debug" id="expr-debug"></pre>
+
+            Parameters:
+            <div id="parameters">
+            </div>
+            <button class="hidden" id="add-params"></button>
+            <button class="hidden" id="rm-params"></button>
+
+            <div id="progress" class="hidden">
+                <div id="progress-bar"></div>
+                <span id="progress-label"></span>
+            </div>
+            <button id="go">Run search</button>
+            <div id="results" class="hidden">
+            </div>
+        </main>
+    </body>
+    <script>
+
+// TODO:
+// Add pi, tau?
+// sqrt
+// exponentials
+// Equal sign for eqality, other operators
+// Multiple expressions
+let samples = [
+    {
+        "expr": "Uin * R1 / (R1 + R2) = Uout",
+        "desc": "Simple voltage divider",
+        "params": {
+            "Uin": "10",
+            "Uout": "7",
+            "R1": ["E12", "100", "1000"],
+            "R2": ["E12", "100", "1000"],
+        }
+    },
+    {
+        "expr": "1 / (2*pi * R * C) = f",
+        "desc": "RC-filter cut-off frequency",
+        "params": {
+            "f": "1000",
+            "R": ["E12", "100", "1000"],
+            "C": ["E12", "100n", "1u"],
+        }
+    },
+    {
+        "expr": "f = 1 / (2*pi * sqrt(L * C))",
+        "desc": "LC-filter resonant frequency",
+        "params": {
+            "f": "100e3",
+            "R": ["E12", "1u", "100u"],
+            "C": ["E12", "1u", "100u"],
+        }
+    },
+    {
+        "expr": "Vout = 1.25+-1% * (1 + R2 / R1) + 55u * R2",
+        "desc": "LT1086 basic adjustable regulator",
+        "params": {
+            "Vout": "7",
+            "R1": ["E12", "100", "1000"],
+            "R2": ["E12", "100", "1000"],
+        }
+    },
+];
+
+document.getElementById("expr").placeholder = samples[0 | Math.random() * samples.length]["expr"];
+
+let _expr_field = document.getElementById("expr");
+
+let _error_span = document.getElementById("error");
+
+let _tok_debug = document.getElementById("tok-debug");
+let _expr_debug = document.getElementById("expr-debug");
+let _parameter_list = document.getElementById("parameters");
+
+let _add_params_btn = document.getElementById("add-params");
+let _rm_params_btn = document.getElementById("rm-params");
+
+let _go_button = document.getElementById("go");
+
+let _results = document.getElementById("results");
+
+let prog_bar = new ProgressBar(document.getElementById("progress"), document.getElementById("progress-bar"), document.getElementById("progress-label"));
+
+app = new App(
+    _expr_field,
+
+    _error_span,
+    _tok_debug,
+    _expr_debug,
+
+    _parameter_list,
+    _add_params_btn,
+    _rm_params_btn,
+
+    _go_button,
+
+    _results,
+
+    prog_bar,
+);
+
+_expr_field.addEventListener("keyup", e => app.update());
+
+_expr_field.value = "R1 + 5 > R2";
+app.update();
+app.add_unset_params();
+app.params.get("R1").ty_select.value = "E96";
+app.params.get("R1").update_display();
+app.params.get("R2").ty_select.value = "E96";
+app.params.get("R2").update_display();
+
+    </script>
+</html>

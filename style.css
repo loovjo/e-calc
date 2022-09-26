@@ -1,0 +1,82 @@
+body {
+    font-size: 1.2em;
+}
+
+body {
+    display: grid;
+    width: 100%;
+    margin: 0;
+
+    grid-template-columns: 20% 1fr  20%;
+    grid-template-rows: 7em auto 7em;
+    column-gap: 1em;
+    row-gap: 1em;
+
+    min-height: 100vh;
+
+    font-family: 'Metrophobic', sans-serif;
+}
+
+#header {
+    grid-column: 1/4;
+    grid-row: 1/2;
+
+    background: gray;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    grid-column: 2/3;
+    grid-row: 2/3;
+
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#expr {
+    width: 100%;
+    font-size: 1.5em;
+}
+
+#results {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.result {
+    width: 100%;
+    border: 1px solid black;
+}
+
+.debug {
+    /*display: none;*/
+}
+
+.hidden {
+    display: none;
+}
+
+
+#progress {
+    position: relative;
+    width: 100%;
+    border: 1px solid black;
+    height: 2em;
+}
+#progress-bar {
+    height: 100%;
+    background-color: blue;
+}
+#progress-label {
+    position: absolute;
+    left: 50%;
+    top: 1em;
+    z-index: 2;
+}
+
